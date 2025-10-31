@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Medi-Reach | Contact{% endblock %}
+{% block content %}
+  <h2>Contact Us</h2>
+  <form method="post" class="form">
+    <label>
+      <span>Name</span>
+      <input type="text" name="name" required />
+    </label>
+
+    <label>
+      <span>Email</span>
+      <input type="email" name="email" required />
+    </label>
+
+    <label>
+      <span>Message</span>
+      <textarea name="message" rows="4" required></textarea>
+    </label>
+
+    <button class="btn" type="submit">Send</button>
+  </form>
+{% endblock %}
+
+
