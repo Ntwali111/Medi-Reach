@@ -6,11 +6,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Create Blueprint for auth routes
 auth_bp = Blueprint('auth', __name__)
 
-# Use your existing database path
-DB_PATH = 'instance/medi_reach.db'
+# Database configuration
+DB_PATH = 'database/medilink.db'
 
 def get_db_connection():
     """Create and return a database connection"""
+    # Create database directory if it doesn't exist
+    os.makedirs('database', exist_ok=True)
+    
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
@@ -34,10 +37,10 @@ def init_db():
         ''')
         
         conn.commit()
-        print("✅ Database initialized successfully!")
+        print("Database initialized successfully!")
         
     except Exception as e:
-        print(f"❌ Error initializing database: {e}")
+        print(f"Error initializing database: {e}")
     finally:
         conn.close()
 
@@ -54,14 +57,14 @@ def add_user(name, phone, address, password):
         ''', (name, phone, address, password_hash))
         
         conn.commit()
-        print(f"✅ User {name} registered successfully!")
+        print(f"User {name} registered successfully!")
         return True
         
     except sqlite3.IntegrityError:
-        print(f"❌ Phone number {phone} already exists!")
+        print(f"Phone number {phone} already exists!")
         return False
     except Exception as e:
-        print(f"❌ Error adding user: {e}")
+        print(f"Error adding user: {e}")
         return False
     finally:
         conn.close()
@@ -79,23 +82,23 @@ def verify_user(phone, password):
         user = cursor.fetchone()
         
         if user and check_password_hash(user['password_hash'], password):
-            print(f"✅ User {user['name']} logged in successfully!")
+            print(f"User {user['name']} logged in successfully!")
             return {
                 'id': user['id'],
                 'name': user['name'], 
                 'phone': user['phone']
             }
         else:
-            print(f"❌ Login failed for phone: {phone}")
+            print(f"Login failed for phone: {phone}")
             return None
             
     except Exception as e:
-        print(f"❌ Error verifying user: {e}")
+        print(f"Error verifying user: {e}")
         return None
     finally:
         conn.close()
 
-# Initialize database
+# Initialize database when this module is imported
 init_db()
 
 # Authentication Routes
@@ -119,8 +122,16 @@ def signup():
             flash('Please fill in all fields!', 'error')
             return redirect(url_for('auth.auth_page'))
         
+        if len(phone) < 10:
+            flash('Please enter a valid phone number!', 'error')
+            return redirect(url_for('auth.auth_page'))
+            
         if password != confirm_password:
             flash('Passwords do not match!', 'error')
+            return redirect(url_for('auth.auth_page'))
+        
+        if len(password) < 6:
+            flash('Password must be at least 6 characters long!', 'error')
             return redirect(url_for('auth.auth_page'))
         
         # Add user to database
@@ -132,7 +143,7 @@ def signup():
             return redirect(url_for('auth.auth_page'))
             
     except Exception as e:
-        print(f"❌ Signup error: {e}")
+        print(f"Signup error: {e}")
         flash('An error occurred during registration. Please try again.', 'error')
         return redirect(url_for('auth.auth_page'))
 
@@ -163,7 +174,7 @@ def login():
             return redirect(url_for('auth.auth_page'))
             
     except Exception as e:
-        print(f"❌ Login error: {e}")
+        print(f"Login error: {e}")
         flash('An error occurred during login. Please try again.', 'error')
         return redirect(url_for('auth.auth_page'))
 
