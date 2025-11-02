@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Medi-Reach | Track Order{% endblock %}
+{% block content %}
+  <h2>Track Your Order</h2>
+  <form method="get" class="form">
+    <label>
+      <span>Order ID</span>
+      <input type="text" name="order_id" required />
+    </label>
+    <button class="btn" type="submit">Track</button>
+  </form>
+
+  {% if status %}
+    <div class="order-status">
+      <h3>Status for Order #{{ order_id }}</h3>
+      <p>{{ status }}</p>
+    </div>
+  {% endif %}
+{% endblock %}
