@@ -1,7 +1,8 @@
 from flask import Flask, url_for, render_template
 from api import api_bp
-from db import init_medicine_table, seed_medicines
+from db import init_medicine_table, init_orders_table, seed_medicines
 from auth import auth_bp
+from order import order_bp
 
 app = Flask(__name__)
 app.secret_key = "replace_with_a_secure_random_key"
@@ -9,9 +10,11 @@ app.secret_key = "replace_with_a_secure_random_key"
 # Register blueprints
 app.register_blueprint(api_bp)
 app.register_blueprint(auth_bp)
+app.register_blueprint(order_bp)
 
 # Initialize DB and seed medicines
 init_medicine_table()
+init_orders_table()
 seed_medicines()
 
 def nav():
@@ -40,9 +43,6 @@ def medicines():
 def contact():
     return nav() + "<h1>Place an Order</h1><p>Ordering UI will be implemented by teammates.</p>"
 
-@app.route("/order")
-def order():
-    return nav() + "<h1>Place an Order</h1><p>Ordering UI will be implemented by teammates.</p>"
 
 if __name__ == "__main__":
     app.run(debug=True)
