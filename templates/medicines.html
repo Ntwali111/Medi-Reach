@@ -3,18 +3,9 @@
 {% block content %}
   <h2>Available Medicines</h2>
 
-  {% if medicines and medicines|length > 0 %}
-    <ul class="list">
-      {% for med in medicines %}
-        <li class="list-item">
-          <span class="name">{{ med.name }}</span>
-          <span class="price">$ {{ '%.2f'|format(med.price) }}</span>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No medicines yet. Use <code>/debug/seed</code> to add sample data in development.</p>
-  {% endif %}
+  <div id="medicine-container">
+    <!-- items will be added here by JS -->
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 {% endblock %}
-
-
