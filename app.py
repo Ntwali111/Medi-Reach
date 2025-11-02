@@ -33,7 +33,12 @@ def home():
 
 @app.route("/medicines")
 def medicines():
-    return nav() + "<h1>Medicines</h1><p>List will be displayed by frontend/data endpoints.</p>"
+    return render_template("medicines.html")
+
+
+@app.route("/contact")
+def contact():
+    return nav() + "<h1>Place an Order</h1><p>Ordering UI will be implemented by teammates.</p>"
 
 @app.route("/order")
 def order():

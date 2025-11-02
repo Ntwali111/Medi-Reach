@@ -1,15 +1,12 @@
-// fetch medicine list from backend API
-fetch('/api/medicines')
+fetch("/api/medicines")
   .then(res => res.json())
   .then(data => {
-    const container = document.getElementById('medicine-list');
-    container.innerHTML = '';
+    const box = document.getElementById("medicine-container");
 
-    data.forEach(med => {
-      const li = document.createElement('li');
-      li.className = 'list-item';
-      li.innerHTML = `<span class="name">${med.name}</span> <span class="price">$${med.price}</span>`;
-      container.appendChild(li);
+    data.medicines.forEach(m => {
+      const row = document.createElement("div");
+      row.innerHTML = `<b>${m.name}</b> – $${m.price.toFixed(2)}`;
+      box.appendChild(row);
     });
   })
-  .catch(err => console.error('Error:', err));
+  .catch(err => console.error(err));
