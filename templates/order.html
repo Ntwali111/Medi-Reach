@@ -2,20 +2,32 @@
 {% block title %}Medi-Reach | Order{% endblock %}
 {% block content %}
   <h2>Place an Order</h2>
-  <form method="post" class="form">
+  <form method="post" action="{{ url_for('order.submit_order') }}" class="form">
     <label>
       <span>Your Name</span>
-      <input type="text" name="customer_name" required />
+      <input type="text" name="customer_name" value="{{ user_name }}" required />
     </label>
 
     <label>
-      <span>Medicine Name</span>
-      <input type="text" name="medicine_name" required />
+      <span>Select Medicine</span>
+      <select name="medicine_id" required>
+        <option value="">-- Select a medicine --</option>
+        {% for medicine in medicines %}
+        <option value="{{ medicine.id }}" data-price="{{ medicine.price }}">
+          {{ medicine.name }} - ${{ "%.2f"|format(medicine.price) }}
+        </option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>
+      <span>Quantity</span>
+      <input type="number" name="quantity" value="1" min="1" required />
     </label>
 
     <label>
       <span>Delivery Address</span>
-      <textarea name="address" rows="3" required></textarea>
+      <textarea name="address" rows="3" placeholder="Enter your delivery address" required></textarea>
     </label>
 
     <button class="btn" type="submit">Submit Order</button>
