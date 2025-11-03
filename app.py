@@ -1,6 +1,22 @@
+
 from flask import Flask, url_for, render_template, request
+from api import api_bp
+from db import init_medicine_table, init_orders_table, seed_medicines
+from auth import auth_bp
+from order import order_bp
 
 app = Flask(__name__)
+app.secret_key = "replace_with_a_secure_random_key"
+
+# Register blueprints
+app.register_blueprint(api_bp)
+app.register_blueprint(auth_bp)
+app.register_blueprint(order_bp)
+
+# Initialize DB and seed medicines
+init_medicine_table()
+init_orders_table()
+seed_medicines()
 
 def nav():
     return (
@@ -21,10 +37,11 @@ def home():
 
 @app.route("/medicines")
 def medicines():
-    return nav() + "<h1>Medicines</h1><p>List will be displayed by frontend/data endpoints.</p>"
+    return render_template("medicines.html")
 
-@app.route("/order")
-def order():
+
+@app.route("/contact")
+def contact():
     return nav() + "<h1>Place an Order</h1><p>Ordering UI will be implemented by teammates.</p>"
 
 @app.route("/contact")
