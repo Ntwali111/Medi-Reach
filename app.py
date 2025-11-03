@@ -1,4 +1,5 @@
-from flask import Flask, url_for, render_template
+
+from flask import Flask, url_for, render_template, request
 from api import api_bp
 from db import init_medicine_table, init_orders_table, seed_medicines
 from auth import auth_bp
@@ -43,6 +44,18 @@ def medicines():
 def contact():
     return nav() + "<h1>Place an Order</h1><p>Ordering UI will be implemented by teammates.</p>"
 
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+@app.route("/track", methods=["GET"])
+def track():
+    order_id = request.args.get("order_id", "")
+    status = None
+    if order_id:
+        # Mock status logic
+        status = "Out for delivery" if order_id == "123" else "Order not found. Try 123."
+    return render_template("track.html", order_id=order_id, status=status)
 
 if __name__ == "__main__":
     app.run(debug=True)
