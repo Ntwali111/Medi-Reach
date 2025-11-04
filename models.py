@@ -89,7 +89,7 @@ def seed_medicines():
         conn.commit()
         print("Sample medicines added!")
     else:
-        print("ℹ Medicines already exist — skipping seeding.")
+        print("Medicines already exist - skipping seeding.")
 
     conn.close()
 

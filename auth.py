@@ -7,12 +7,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 auth_bp = Blueprint('auth', __name__)
 
 # Database configuration
-DB_PATH = 'database/medilink.db'
+DB_PATH = os.path.join('instance', 'medi_reach.db')
 
 def get_db_connection():
     """Create and return a database connection"""
     # Create database directory if it doesn't exist
-    os.makedirs('database', exist_ok=True)
+    os.makedirs('instance', exist_ok=True)
     
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row

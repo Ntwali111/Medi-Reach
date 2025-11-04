@@ -23,7 +23,7 @@ def nav():
         f'<nav style="display:flex;gap:12px;padding:12px 0;">'
         f'<a href="{url_for("home")}">Home</a>'
         f'<a href="{url_for("medicines")}">Medicines</a>'
-        f'<a href="{url_for("order")}">Order</a>'
+        f'<a href="{url_for("order.order")}">Order</a>'
         f'</nav><hr/>'
     )
 
@@ -39,10 +39,6 @@ def home():
 def medicines():
     return render_template("medicines.html")
 
-
-@app.route("/contact")
-def contact():
-    return nav() + "<h1>Place an Order</h1><p>Ordering UI will be implemented by teammates.</p>"
 
 @app.route("/contact")
 def contact():
