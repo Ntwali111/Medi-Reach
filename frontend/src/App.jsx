@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -12,21 +14,30 @@ import Track from './pages/Track';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/medicines" element={<Medicines />} />
-            <Route path="/medicine/:id" element={<MedicineDetails />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/order/:id" element={<Order />} />
-            <Route path="/track" element={<Track />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <AuthProvider>
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/medicines" element={<Medicines />} />
+              <Route path="/medicine/:id" element={<MedicineDetails />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route 
+                path="/order/:id" 
+                element={
+                  <ProtectedRoute>
+                    <Order />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/track" element={<Track />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </AuthProvider>
     </Router>
   );
 }

@@ -2,11 +2,15 @@
 
 A modern web application designed to make medicine search, ordering, and delivery tracking easy and efficient. Medi-Reach bridges the gap between medicine accessibility and delivery efficiency by connecting users with local pharmacies.
 
-![Medi-Reach](https://img.shields.io/badge/Status-Frontend_Complete-success)
+![Medi-Reach](https://img.shields.io/badge/Status-Fully_Integrated-success)
 ![React](https://img.shields.io/badge/React-18.2.0-blue)
+![Flask](https://img.shields.io/badge/Flask-3.0.0-green)
 ![Tailwind](https://img.shields.io/badge/TailwindCSS-3.3.6-38bdf8)
+![JWT](https://img.shields.io/badge/JWT-Auth-red)
 
 ## 🎯 Project Overview
+
+**✅ FULLY INTEGRATED** - Frontend and Backend working together seamlessly!
 
 Medi-Reach is a comprehensive medicine delivery platform that allows users to:
 - 🔍 Search for medicines from an extensive catalog
@@ -14,6 +18,8 @@ Medi-Reach is a comprehensive medicine delivery platform that allows users to:
 - 🚚 Track deliveries in real-time
 - 💊 Upload prescriptions for prescription-required medicines
 - 📱 Access the platform from any device (fully responsive)
+- 🔐 Secure JWT authentication
+- 💾 Real-time data from database
 
 ## 📁 Project Structure
 
@@ -61,29 +67,35 @@ Medi-Reach/
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
+- Python 3.8+ (for backend)
+- Node.js (v16 or higher) (for frontend)
 - npm or yarn
 - Git
 
-### Frontend Setup
+### Quick Start (Full Stack)
 
-1. **Navigate to the frontend directory:**
-   ```bash
-   cd frontend
-   ```
+#### 1. Start Backend (Terminal 1)
+```bash
+cd backend
+pip install -r requirements.txt
+python run.py
+```
+Backend runs at: `http://127.0.0.1:5000`
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+#### 2. Start Frontend (Terminal 2)
+```bash
+cd frontend
+cp .env.example .env  # First time only
+npm install           # First time only
+npm run dev
+```
+Frontend runs at: `http://localhost:3000`
 
-3. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
+#### 3. Login
+- **Email**: `admin@medireach.com`
+- **Password**: `admin123`
 
-4. **Open your browser:**
-   The app will automatically open at `http://localhost:3000`
+**📖 See [START_APP.md](START_APP.md) for detailed instructions**
 
 ### Build for Production
 

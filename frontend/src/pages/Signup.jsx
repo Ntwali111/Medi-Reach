@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, Eye, EyeOff, Calendar, MapPin, Phone } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, Calendar, MapPin, Phone, AlertCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { signup } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ const Signup = () => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,17 +63,25 @@ const Signup = () => {
     }
 
     setIsLoading(true);
+    setApiError('');
     
-    // Simulate API call
-    setTimeout(() => {
-      localStorage.setItem('token', 'mock-jwt-token');
-      localStorage.setItem('user', JSON.stringify({
-        email: formData.email,
-        name: formData.fullName,
-      }));
-      setIsLoading(false);
+    const result = await signup({
+      username: formData.fullName.split(' ')[0].toLowerCase(),
+      email: formData.email,
+      password: formData.password,
+      full_name: formData.fullName,
+      phone: formData.phone,
+      date_of_birth: formData.dateOfBirth,
+      country: formData.country,
+    });
+
+    setIsLoading(false);
+
+    if (result.success) {
       navigate('/');
-    }, 1000);
+    } else {
+      setApiError(result.error);
+    }
   };
 
   return (
@@ -84,6 +95,14 @@ const Signup = () => {
 
         {/* Signup Form */}
         <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8">
+          {/* API Error Message */}
+          {apiError && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3 mb-6">
+              <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-red-700">{apiError}</p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Full Name */}
             <div>

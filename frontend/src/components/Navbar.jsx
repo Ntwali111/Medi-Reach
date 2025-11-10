@@ -1,11 +1,18 @@
-import { Link, useLocation } from 'react-router-dom';
-import { Home, Package, ShoppingCart, User, Menu, X } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Home, Package, ShoppingCart, User, Menu, X, LogOut } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isAuthenticated = localStorage.getItem('token');
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
 
   const navLinks = [
     { path: '/', label: 'Home', icon: Home },
@@ -48,13 +55,18 @@ const Navbar = () => {
             {/* Auth Buttons */}
             <div className="hidden md:flex items-center space-x-4">
               {isAuthenticated ? (
-                <Link
-                  to="/profile"
-                  className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-dark transition-colors"
-                >
-                  <User size={20} />
-                  <span>Profile</span>
-                </Link>
+                <>
+                  <span className="text-gray-700">
+                    Hi, <span className="font-semibold">{user?.username || user?.email}</span>
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors"
+                  >
+                    <LogOut size={18} />
+                    <span>Logout</span>
+                  </button>
+                </>
               ) : (
                 <>
                   <Link

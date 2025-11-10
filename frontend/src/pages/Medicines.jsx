@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Filter, X } from 'lucide-react';
-import { mockMedicines } from '../data/mockData';
+import { medicineAPI } from '../services/api';
 import MedicineCard from '../components/MedicineCard';
 import Loader from '../components/Loader';
 
@@ -14,15 +14,40 @@ const Medicines = () => {
   const [showPrescriptionOnly, setShowPrescriptionOnly] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
+  const [categories, setCategories] = useState(['all']);
+  const [error, setError] = useState('');
 
-  const categories = ['all', ...new Set(mockMedicines.map(m => m.category.toLowerCase()))];
-
+  // Fetch medicines from API
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setMedicines(mockMedicines);
-      setIsLoading(false);
-    }, 500);
+    const fetchMedicines = async () => {
+      try {
+        setIsLoading(true);
+        const response = await medicineAPI.getAll();
+        setMedicines(response.data.medicines);
+        setError('');
+      } catch (err) {
+        console.error('Failed to fetch medicines:', err);
+        setError('Failed to load medicines. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMedicines();
+  }, []);
+
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await medicineAPI.getCategories();
+        setCategories(['all', ...response.data.categories]);
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -45,7 +70,7 @@ const Medicines = () => {
 
     // Prescription filter
     if (showPrescriptionOnly) {
-      filtered = filtered.filter(medicine => medicine.requiresPrescription);
+      filtered = filtered.filter(medicine => medicine.requires_prescription);
     }
 
     setFilteredMedicines(filtered);
@@ -79,6 +104,13 @@ const Medicines = () => {
             Find the medicines you need from our extensive catalog
           </p>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <p className="text-red-700">{error}</p>
+          </div>
+        )}
 
         {/* Search and Filters */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-8">

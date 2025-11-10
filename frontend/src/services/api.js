@@ -35,30 +35,33 @@ api.interceptors.response.use(
   }
 );
 
-// API endpoints
+// API endpoints matching Flask backend
 export const authAPI = {
-  login: (credentials) => api.post('/auth/login', credentials),
-  signup: (userData) => api.post('/auth/signup', userData),
-  logout: () => api.post('/auth/logout'),
+  login: (credentials) => api.post('/login', credentials),
+  signup: (userData) => api.post('/signup', userData),
+  logout: () => api.post('/logout'),
+  getCurrentUser: () => api.get('/me'),
+  refreshToken: () => api.post('/refresh'),
 };
 
 export const medicineAPI = {
   getAll: (params) => api.get('/medicines', { params }),
   getById: (id) => api.get(`/medicines/${id}`),
-  search: (query) => api.get('/medicines/search', { params: { q: query } }),
+  create: (medicineData) => api.post('/medicines', medicineData),
+  update: (id, medicineData) => api.put(`/medicines/${id}`, medicineData),
+  delete: (id) => api.delete(`/medicines/${id}`),
+  getCategories: () => api.get('/medicines/categories'),
 };
 
 export const orderAPI = {
   create: (orderData) => api.post('/orders', orderData),
   getById: (id) => api.get(`/orders/${id}`),
-  getMyOrders: () => api.get('/orders/my-orders'),
-  updateStatus: (id, status) => api.patch(`/orders/${id}/status`, { status }),
-};
-
-export const pharmacyAPI = {
-  getAll: () => api.get('/pharmacies'),
-  getById: (id) => api.get(`/pharmacies/${id}`),
-  getNearby: (lat, lng) => api.get('/pharmacies/nearby', { params: { lat, lng } }),
+  getMyOrders: (params) => api.get('/orders', { params }),
+  trackByNumber: (orderNumber) => api.get(`/orders/track/${orderNumber}`),
+  updateStatus: (id, status) => api.put(`/orders/${id}/status`, { status }),
+  cancel: (id) => api.delete(`/orders/${id}`),
+  getAll: (params) => api.get('/orders/all', { params }),
+  getStats: () => api.get('/orders/stats'),
 };
 
 export default api;

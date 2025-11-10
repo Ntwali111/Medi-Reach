@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, AlertCircle, Package } from 'lucide-react';
 
 const MedicineCard = ({ medicine }) => {
-  const { id, name, price, stock, requiresPrescription, category, image } = medicine;
+  const { id, name, price, stock, requires_prescription, category, image_url } = medicine;
+  const image = image_url;
 
   return (
     <div className="card group">
@@ -22,7 +23,7 @@ const MedicineCard = ({ medicine }) => {
         )}
         
         {/* Prescription Badge */}
-        {requiresPrescription && (
+        {requires_prescription && (
           <div className="absolute top-2 right-2 bg-accent-red text-white text-xs px-2 py-1 rounded-full font-medium flex items-center space-x-1">
             <AlertCircle size={12} />
             <span>Rx Required</span>

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -11,6 +13,7 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,18 +52,20 @@ const Login = () => {
     }
 
     setIsLoading(true);
+    setApiError('');
     
-    // Simulate API call
-    setTimeout(() => {
-      // Mock successful login
-      localStorage.setItem('token', 'mock-jwt-token');
-      localStorage.setItem('user', JSON.stringify({
-        email: formData.email,
-        name: 'John Doe',
-      }));
-      setIsLoading(false);
+    const result = await login({
+      email: formData.email,
+      password: formData.password,
+    });
+
+    setIsLoading(false);
+
+    if (result.success) {
       navigate('/');
-    }, 1000);
+    } else {
+      setApiError(result.error);
+    }
   };
 
   return (
@@ -99,6 +104,14 @@ const Login = () => {
           <h3 className="text-2xl font-bold text-secondary mb-6 text-center">
             Sign In
           </h3>
+
+          {/* API Error Message */}
+          {apiError && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-red-700">{apiError}</p>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
