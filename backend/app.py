@@ -1,14 +1,7 @@
-# Medi-Reach Backend API
-# This is a placeholder file for the backend implementation
-# Backend will be implemented in a future phase
+# This file is deprecated. Use run.py instead.
+# Kept for backwards compatibility
 
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return {'message': 'Medi-Reach API - Coming Soon'}
+from run import app
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
