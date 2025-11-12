@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Search, Package, Truck, CheckCircle, Clock, MapPin, Phone } from 'lucide-react';
 import { mockOrders, orderStatuses } from '../data/mockData';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 const Track = () => {
   const location = useLocation();
@@ -10,6 +12,10 @@ const Track = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+  const mapRef = useRef(null);
+  const driverMarkerRef = useRef(null);
+  const routeLineRef = useRef(null);
+  const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
     if (location.state?.orderId) {
@@ -63,6 +69,102 @@ const Track = () => {
       active: index === currentIndex,
     }));
   };
+
+  useEffect(() => {
+    if (!order) return;
+
+    const getSavedOrderAddress = (id) => {
+      try {
+        const map = JSON.parse(localStorage.getItem('mr_order_address_map') || '{}');
+        return map[id] || null;
+      } catch {
+        return null;
+      }
+    };
+
+    const pickCityFromText = (text) => {
+      const t = (text || '').toLowerCase();
+      if (t.includes('yaounde')) return 'Yaounde';
+      if (t.includes('douala')) return 'Douala';
+      if (t.includes('bamenda')) return 'Bamenda';
+      return '';
+    };
+
+    const cityToLatLng = (city) => {
+      switch ((city || '').toLowerCase()) {
+        case 'yaounde':
+          return [3.848, 11.502];
+        case 'douala':
+          return [4.051, 9.768];
+        case 'bamenda':
+          return [5.959, 10.145];
+        default:
+          return [3.848, 11.502];
+      }
+    };
+
+    const sel = getSavedOrderAddress(order.id);
+    const addressText = sel?.street || order.deliveryAddress || '';
+    const cityText = sel?.city || pickCityFromText(order.deliveryAddress) || '';
+    const userPos = cityToLatLng(cityText);
+
+    let map = mapRef.current;
+    if (!map) {
+      map = L.map('orderMap').setView(userPos, 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(map);
+      mapRef.current = map;
+      setMapReady(true);
+    } else {
+      map.setView(userPos, 13);
+      if (driverMarkerRef.current) {
+        map.removeLayer(driverMarkerRef.current);
+        driverMarkerRef.current = null;
+      }
+      if (routeLineRef.current) {
+        map.removeLayer(routeLineRef.current);
+        routeLineRef.current = null;
+      }
+    }
+
+    const userMarker = L.circleMarker(userPos, { radius: 8, color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.8 }).addTo(map);
+    userMarker.bindPopup(`${addressText || 'Delivery Address'}${cityText ? ', ' + cityText : ''}`);
+
+    let driverPos = [userPos[0] + 0.02, userPos[1] - 0.02];
+    driverMarkerRef.current = L.circleMarker(driverPos, { radius: 8, color: '#3b82f6', fillColor: '#3b82f6', fillOpacity: 0.8 }).addTo(map);
+    driverMarkerRef.current.bindPopup('Driver');
+
+    routeLineRef.current = L.polyline([driverPos, userPos], { color: '#9333ea', weight: 4, opacity: 0.8 }).addTo(map);
+
+    const moveInterval = setInterval(() => {
+      const step = 0.2;
+      const latDiff = userPos[0] - driverPos[0];
+      const lngDiff = userPos[1] - driverPos[1];
+      const dist = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff);
+      if (dist < 0.0005) return;
+      const unitLat = latDiff / dist;
+      const unitLng = lngDiff / dist;
+      driverPos = [driverPos[0] + unitLat * 0.001 * step, driverPos[1] + unitLng * 0.001 * step];
+      if (driverMarkerRef.current) driverMarkerRef.current.setLatLng(driverPos);
+      if (routeLineRef.current) routeLineRef.current.setLatLngs([driverPos, userPos]);
+    }, 3000);
+
+    return () => {
+      clearInterval(moveInterval);
+      if (mapRef.current) {
+        if (driverMarkerRef.current) {
+          mapRef.current.removeLayer(driverMarkerRef.current);
+          driverMarkerRef.current = null;
+        }
+        if (routeLineRef.current) {
+          mapRef.current.removeLayer(routeLineRef.current);
+          routeLineRef.current = null;
+        }
+      }
+    };
+  }, [order]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -190,6 +292,11 @@ const Track = () => {
                   </p>
                 </div>
               )}
+            </div>
+
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h2 className="text-xl font-bold text-secondary mb-4">Delivery Map</h2>
+              <div id="orderMap" className="w-full h-64 md:h-80 rounded-lg"></div>
             </div>
 
             {/* Tracking Timeline */}

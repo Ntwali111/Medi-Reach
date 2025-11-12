@@ -22,6 +22,16 @@ const Order = () => {
     notes: '',
   });
   const [errors, setErrors] = useState({});
+  const [addresses, setAddresses] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('mr_addresses') || '[]');
+    } catch {
+      return [];
+    }
+  });
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [addressEditor, setAddressEditor] = useState({ id: null, name: '', street: '', city: '', contact: '' });
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -37,6 +47,64 @@ const Order = () => {
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
+  };
+
+  const saveAddresses = (list) => {
+    setAddresses(list);
+    localStorage.setItem('mr_addresses', JSON.stringify(list));
+  };
+
+  const handleSelectAddress = (id) => {
+    setSelectedAddressId(id);
+    const addr = addresses.find(a => a.id === id);
+    if (addr) {
+      setFormData(prev => ({
+        ...prev,
+        deliveryAddress: addr.street,
+        city: addr.city,
+        phone: addr.contact
+      }));
+    }
+  };
+
+  const startAddAddress = () => {
+    setAddressEditor({ id: null, name: '', street: '', city: '', contact: '' });
+    setIsEditingAddress(true);
+  };
+
+  const startEditAddress = () => {
+    const addr = addresses.find(a => a.id === selectedAddressId);
+    if (!addr) return;
+    setAddressEditor({ ...addr });
+    setIsEditingAddress(true);
+  };
+
+  const handleDeleteAddress = () => {
+    if (!selectedAddressId) return;
+    const next = addresses.filter(a => a.id !== selectedAddressId);
+    saveAddresses(next);
+    setSelectedAddressId(null);
+  };
+
+  const handleAddressEditorChange = (e) => {
+    const { name, value } = e.target;
+    setAddressEditor(prev => ({ ...prev, [name]: value }));
+  };
+
+  const commitAddressEditor = () => {
+    const { id, name, street, city, contact } = addressEditor;
+    if (!name || !street || !city || !contact) return;
+    if (id) {
+      const next = addresses.map(a => (a.id === id ? { id, name, street, city, contact } : a));
+      saveAddresses(next);
+      setSelectedAddressId(id);
+    } else {
+      const newId = 'addr_' + Math.random().toString(36).slice(2, 9);
+      const next = [...addresses, { id: newId, name, street, city, contact }];
+      saveAddresses(next);
+      setSelectedAddressId(newId);
+    }
+    setIsEditingAddress(false);
   };
 
   const handleFileChange = (e) => {
@@ -75,12 +143,24 @@ const Order = () => {
     // Simulate API call
     setTimeout(() => {
       const orderId = 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+      // Persist selected address for this order
+      try {
+        const map = JSON.parse(localStorage.getItem('mr_order_address_map') || '{}');
+        const selected = addresses.find(a => a.id === selectedAddressId) || null;
+        if (selected) {
+          map[orderId] = selected;
+          localStorage.setItem('mr_order_address_map', JSON.stringify(map));
+        }
+      } catch {}
+
       setIsSubmitting(false);
       navigate('/track', { 
         state: { 
           orderId,
           success: true,
-          message: 'Order placed successfully!'
+          message: 'Order placed successfully!',
+          selectedAddress: addresses.find(a => a.id === selectedAddressId) || null
         } 
       });
     }, 1500);
@@ -146,6 +226,43 @@ const Order = () => {
                 </h2>
                 
                 <div className="space-y-4">
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Saved Addresses</label>
+                        <div className="flex gap-2">
+                          <select
+                            value={selectedAddressId || ''}
+                            onChange={(e) => handleSelectAddress(e.target.value || null)}
+                            className="input-field"
+                          >
+                            <option value="">Select an address</option>
+                            {addresses.map(a => (
+                              <option key={a.id} value={a.id}>{a.name} — {a.street}, {a.city}</option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button type="button" onClick={startAddAddress} className="btn-primary whitespace-nowrap">Add</button>
+                        <button type="button" onClick={startEditAddress} disabled={!selectedAddressId} className={`px-4 py-2 rounded-lg border ${selectedAddressId ? 'border-primary text-primary hover:bg-primary/5' : 'border-gray-200 text-gray-400 cursor-not-allowed'}`}>Edit</button>
+                        <button type="button" onClick={handleDeleteAddress} disabled={!selectedAddressId} className={`px-4 py-2 rounded-lg border ${selectedAddressId ? 'border-red-300 text-red-600 hover:bg-red-50' : 'border-gray-200 text-gray-400 cursor-not-allowed'}`}>Delete</button>
+                      </div>
+                    </div>
+
+                    {isEditingAddress && (
+                      <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <input name="name" value={addressEditor.name} onChange={handleAddressEditorChange} placeholder="Name (Home, Office)" className="input-field" />
+                        <input name="street" value={addressEditor.street} onChange={handleAddressEditorChange} placeholder="Street / Address" className="input-field" />
+                        <input name="city" value={addressEditor.city} onChange={handleAddressEditorChange} placeholder="City" className="input-field" />
+                        <input name="contact" value={addressEditor.contact} onChange={handleAddressEditorChange} placeholder="Contact Number" className="input-field" />
+                        <div className="md:col-span-4 flex justify-end gap-2">
+                          <button type="button" onClick={() => setIsEditingAddress(false)} className="px-4 py-2 rounded-lg border border-gray-300">Cancel</button>
+                          <button type="button" onClick={commitAddressEditor} className="btn-primary">Save</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Delivery Address *
