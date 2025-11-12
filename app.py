@@ -35,10 +35,45 @@ def contact():
 def track():
     order_id = request.args.get("order_id", "")
     status = None
+    order_data = None
+    
     if order_id:
-        # Mock status logic
-        status = "Out for delivery" if order_id == "123" else "Order not found. Try 123."
-    return render_template("track.html", order_id=order_id, status=status)
+        try:
+            from db import get_db_connection
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT id, medicine_name, quantity, total_price, delivery_address, 
+                       customer_name, status, created_at
+                FROM orders WHERE id = ?
+                """,
+                (order_id,)
+            )
+            order = cursor.fetchone()
+            conn.close()
+            
+            if order:
+                order_data = dict(order)
+                status = order_data.get('status', 'pending').title()
+                if status == 'Pending':
+                    status = 'Order is being processed'
+                elif status == 'Out For Delivery' or status == 'In Transit':
+                    status = 'Out for delivery'
+                elif status == 'Delivered':
+                    status = 'Order delivered successfully'
+                else:
+                    status = f'Status: {status}'
+            else:
+                status = None
+        except Exception as e:
+            print(f"Error fetching order: {e}")
+            status = None
+    else:
+        # If no order_id provided, check if there's a demo order
+        status = None
+    
+    return render_template("track.html", order_id=order_id, status=status, order_data=order_data)
 
 if __name__ == "__main__":
     app.run(debug=True)

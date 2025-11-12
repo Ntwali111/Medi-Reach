@@ -1,19 +1,132 @@
 {% extends "base.html" %}
 {% block title %}Medi-Reach | Track Order{% endblock %}
 {% block content %}
-  <h2>Track Your Order</h2>
-  <form method="get" class="form">
-    <label>
-      <span>Order ID</span>
-      <input type="text" name="order_id" required />
-    </label>
-    <button class="btn" type="submit">Track</button>
-  </form>
+  <div class="track-order-page">
+    <h2>Track Your Order</h2>
+    <form method="get" class="track-form">
+      <label>
+        <span>Order ID</span>
+        <input type="text" name="order_id" id="order-id-input" placeholder="Enter your order ID" value="{{ order_id }}" required />
+      </label>
+      <button class="btn primary" type="submit">Track Order</button>
+    </form>
 
-  {% if status %}
-    <div class="order-status">
-      <h3>Status for Order #{{ order_id }}</h3>
-      <p>{{ status }}</p>
-    </div>
-  {% endif %}
+    {% if status and order_id %}
+      <div class="order-status-container">
+        <div class="order-status">
+          <h3>Order #{{ order_id }}</h3>
+          <p class="status-text">{{ status }}</p>
+        </div>
+        
+        {% if order_data %}
+        <div class="order-details-info">
+          <p><strong>Medicine:</strong> {{ order_data.medicine_name }}</p>
+          <p><strong>Quantity:</strong> {{ order_data.quantity }}</p>
+          <p><strong>Total Price:</strong> {{ "%.2f"|format(order_data.total_price) }} RWF</p>
+          <p><strong>Delivery Address:</strong> {{ order_data.delivery_address }}</p>
+        </div>
+        {% endif %}
+        
+        <div class="map-container">
+          <div id="tracking-map" style="height: 500px; width: 100%; border-radius: 12px; margin-top: 2rem;"></div>
+          <div class="delivery-info">
+            <div class="info-item">
+              <strong>Estimated Distance:</strong>
+              <span id="distance">Calculating...</span>
+            </div>
+            <div class="info-item">
+              <strong>Estimated Time:</strong>
+              <span id="time">Calculating...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% elif order_id and not status %}
+      <div class="order-status error">
+        <p>Order not found. Please check your order ID.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <script>
+    {% if status and order_id %}
+    // Initialize map when order is found
+    document.addEventListener('DOMContentLoaded', function() {
+      // Default coordinates (Kigali, Rwanda)
+      const pharmacyLat = -1.9441;
+      const pharmacyLon = 30.0619;
+      const deliveryLat = -1.9536;
+      const deliveryLon = 30.0605;
+      
+      // Initialize map
+      const map = L.map('tracking-map').setView([(pharmacyLat + deliveryLat) / 2, (pharmacyLon + deliveryLon) / 2], 13);
+      
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+      
+      // Add pharmacy marker (origin)
+      const pharmacyMarker = L.marker([pharmacyLat, pharmacyLon]).addTo(map);
+      pharmacyMarker.bindPopup('<b>Pharmacy</b><br>Order Origin').openPopup();
+      
+      // Add delivery marker (destination)
+      const deliveryMarker = L.marker([deliveryLat, deliveryLon]).addTo(map);
+      deliveryMarker.bindPopup('<b>Delivery Address</b><br>Your Location');
+      
+      // Add route polyline
+      const routeCoordinates = [
+        [pharmacyLat, pharmacyLon],
+        [deliveryLat, deliveryLon]
+      ];
+      
+      const routePolyline = L.polyline(routeCoordinates, {
+        color: '#00A896',
+        weight: 4,
+        opacity: 0.7
+      }).addTo(map);
+      
+      // Fit map to show both markers
+      map.fitBounds(routePolyline.getBounds(), { padding: [50, 50] });
+      
+      // Calculate distance
+      function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371; // Radius of the Earth in km
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+          Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+      }
+      
+      const distance = calculateDistance(pharmacyLat, pharmacyLon, deliveryLat, deliveryLon);
+      const distanceKm = distance.toFixed(2);
+      const distanceMiles = (distance * 0.621371).toFixed(2);
+      
+      // Update distance display
+      document.getElementById('distance').textContent = `${distanceKm} km (${distanceMiles} miles)`;
+      
+      // Estimate delivery time (assuming average speed of 30 km/h in city)
+      const avgSpeed = 30; // km/h
+      const timeHours = distance / avgSpeed;
+      const timeMinutes = Math.round(timeHours * 60);
+      
+      if (timeMinutes < 60) {
+        document.getElementById('time').textContent = `~${timeMinutes} minutes`;
+      } else {
+        const hours = Math.floor(timeMinutes / 60);
+        const mins = timeMinutes % 60;
+        document.getElementById('time').textContent = `~${hours} hour${hours > 1 ? 's' : ''} ${mins} minute${mins !== 1 ? 's' : ''}`;
+      }
+    });
+    {% endif %}
+  </script>
 {% endblock %}
