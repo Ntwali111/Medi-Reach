@@ -1,144 +1,68 @@
 {% extends "base.html" %}
 {% block title %}Medi-Reach | Home{% endblock %}
 {% block content %}
-  <section class="hero">
+  <!-- Hero Section -->
+  <section class="hero-section">
     <div class="hero-content">
-      <h1>Bridging the Healthcare Gap in Rural Communities</h1>
-      <p>
-        Medi-Reach connects pharmacies, delivery agents, and underserved communities 
-        to ensure life-saving medicines reach everyone, regardless of location.
-      </p>
-      <div class="cta-group">
-        <a class="btn primary" href="{{ url_for('medicines') }}">Browse Medicines</a>
-        <a class="btn secondary" href="{{ url_for('order') }}">Place an Order</a>
-      </div>
-    </div>
-    <div class="hero-image">
-      <img src="/static/images/hero-image.svg" alt="Medical delivery to rural areas">
+      <h1>Welcome to Medi-Reach</h1>
+      <p class="hero-subtitle">Your trusted partner for medicine delivery. Search, order, and track with ease.</p>
     </div>
   </section>
 
-  <section class="features">
+  <!-- Why Choose Medi-Reach Section -->
+  <section class="features-section">
     <div class="container">
-      <h2>How Medi-Reach Works</h2>
+      <h2>Why Choose Medi-Reach?</h2>
       <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">📋</div>
-          <h3>Easy Ordering</h3>
-          <p>Simple process to request medicines through our website or USSD service</p>
+        <div class="feature-item">
+          <div class="feature-icon">🔍</div>
+          <h3>Easy Search</h3>
+          <p>Find medicines quickly with our smart search</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">🏥</div>
-          <h3>Verified Pharmacies</h3>
-          <p>All our partner pharmacies are certified and provide quality medicines</p>
+        <div class="feature-item">
+          <div class="feature-icon">📦</div>
+          <h3>Wide Selection</h3>
+          <p>Access to thousands of medicines and health products</p>
         </div>
-        <div class="feature-card">
+        <div class="feature-item">
           <div class="feature-icon">🚚</div>
-          <h3>Reliable Delivery</h3>
-          <p>Our network ensures medicines reach even the most remote locations</p>
+          <h3>Fast Delivery</h3>
+          <p>Get your medicines delivered to your doorstep</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">💰</div>
-          <h3>Affordable Pricing</h3>
-          <p>We work to keep medicine costs accessible for all communities</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="mission">
-    <div class="container">
-      <div class="mission-content">
-        <h2>Our Mission</h2>
-        <p>
-          In many rural African communities, access to essential medicines remains 
-          a significant challenge. Geographic isolation, limited transportation, 
-          and sparse healthcare facilities leave millions without proper medical care.
-        </p>
-        <p>
-          Medi-Reach was founded to bridge this gap. We leverage technology to 
-          connect patients with pharmacies and delivery networks, ensuring that 
-          distance no longer determines health outcomes.
-        </p>
-        <div class="stats">
-          <div class="stat">
-            <span class="stat-number">15+</span>
-            <span class="stat-label">Communities Served</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">2,500+</span>
-            <span class="stat-label">Medicines Delivered</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">98%</span>
-            <span class="stat-label">Delivery Success Rate</span>
-          </div>
+        <div class="feature-item">
+          <div class="feature-icon">✅</div>
+          <h3>Verified Pharmacies</h3>
+          <p>All pharmacies are licensed and verified</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="ussd">
+  <!-- Recommended Products Section -->
+  <section class="products-section">
     <div class="container">
-      <div class="ussd-content">
-        <div class="ussd-info">
-          <h2>No Internet? No Problem.</h2>
-          <p>
-            For communities with limited internet access, we provide a simple 
-            USSD service that works on any mobile phone.
-          </p>
-          <div class="ussd-code">
-            <span class="code">*123*456#</span>
-            <span class="instruction">Dial this code to access Medi-Reach services</span>
-          </div>
-          <ul class="ussd-features">
-            <li>✓ Check available medicines</li>
-            <li>✓ Place orders directly</li>
-            <li>✓ Track delivery status</li>
-            <li>✓ No data connection required</li>
-          </ul>
+      <h2>Recommended Products</h2>
+      <div class="products-grid">
+        <div class="product-card">
+          <h3>Paracetamol 500mg</h3>
+          <p class="product-price">$5.00</p>
+          <a href="{{ url_for('medicines') }}" class="btn primary">View Details</a>
         </div>
-        <div class="ussd-visual">
-          <div class="phone-mockup">
-            <div class="phone-screen">
-              <div class="ussd-demo">
-                <p>Medi-Reach Services</p>
-                <p>1. Browse Medicines</p>
-                <p>2. Place Order</p>
-                <p>3. Track Delivery</p>
-                <p>4. Contact Support</p>
-                <p>Enter choice:</p>
-              </div>
-            </div>
-          </div>
+        <div class="product-card">
+          <h3>Amoxicillin 250mg</h3>
+          <p class="product-price">$8.50</p>
+          <a href="{{ url_for('medicines') }}" class="btn primary">View Details</a>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="testimonials">
-    <div class="container">
-      <h2>Community Impact</h2>
-      <div class="testimonial-cards">
-        <div class="testimonial-card">
-          <div class="quote">"Before Medi-Reach, we had to travel 50km to get my daughter's asthma medication. Now it comes directly to our village."</div>
-          <div class="author">- Sarah K., Mother, Rural Kenya</div>
+        <div class="product-card">
+          <h3>Omeprazole 20mg</h3>
+          <p class="product-price">$8.00</p>
+          <a href="{{ url_for('medicines') }}" class="btn primary">View Details</a>
         </div>
-        <div class="testimonial-card">
-          <div class="quote">"As a community health worker, Medi-Reach has transformed how I can serve my patients. Reliable medicine access saves lives."</div>
-          <div class="author">- Dr. Abebe, Health Worker, Ethiopia</div>
+        <div class="product-card">
+          <h3>Cetirizine 10mg</h3>
+          <p class="product-price">$3.50</p>
+          <a href="{{ url_for('medicines') }}" class="btn primary">View Details</a>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="final-cta">
-    <div class="container">
-      <h2>Ready to Get Started?</h2>
-      <p>Join thousands who now have reliable access to essential medicines</p>
-      <div class="cta-group">
-        <a class="btn primary" href="{{ url_for('medicines') }}">Browse Our Medicines</a>
-        <a class="btn secondary" href="{{ url_for('contact') }}">Contact Us</a>
       </div>
     </div>
   </section>

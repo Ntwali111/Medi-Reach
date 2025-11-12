@@ -18,22 +18,9 @@ init_medicine_table()
 init_orders_table()
 seed_medicines()
 
-def nav():
-    return (
-        f'<nav style="display:flex;gap:12px;padding:12px 0;">'
-        f'<a href="{url_for("home")}">Home</a>'
-        f'<a href="{url_for("medicines")}">Medicines</a>'
-        f'<a href="{url_for("order.order")}">Order</a>'
-        f'</nav><hr/>'
-    )
-
 @app.route("/", endpoint="home")
 def home():
-    return (
-        nav()
-        + "<h1>Medi-Reach</h1>"
-        + "<p>Welcome. Use the navigation to browse medicines or place an order.</p>"
-    )
+    return render_template("index.html")
 
 @app.route("/medicines")
 def medicines():

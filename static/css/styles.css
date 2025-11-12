@@ -1,17 +1,22 @@
-/* Medi-Reach CSS - Bridging Healthcare Gaps */
+/* Medi-Reach CSS - Modern Teal/Green Theme */
 :root {
-  --primary-color: #2E8B57; /* Sea Green - represents health and growth */
-  --primary-dark: #1E6B47;
-  --secondary-color: #4682B4; /* Steel Blue - trust and reliability */
-  --accent-color: #FF7F50; /* Coral - call to action */
-  --light-color: #F8F9FA;
-  --dark-color: #343A40;
-  --text-color: #333333;
-  --text-light: #6C757D;
+  --primary-color: #00A896; /* Modern Teal - from design */
+  --primary-dark: #008B7A;
+  --primary-light: #00D4B8;
+  --secondary-color: #028174; /* Darker Teal */
+  --accent-color: #02C39A; /* Bright Teal */
+  --light-color: #F0F9F7; /* Light Teal Background */
+  --dark-color: #1A1A1A;
+  --text-color: #2D3748;
+  --text-light: #718096;
   --white: #FFFFFF;
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --border-radius: 8px;
+  --card-bg: #FFFFFF;
+  --shadow: 0 2px 8px rgba(0, 168, 150, 0.15);
+  --shadow-hover: 0 4px 12px rgba(0, 168, 150, 0.25);
+  --border-radius: 12px;
   --transition: all 0.3s ease;
+  --success-color: #10B981;
+  --warning-color: #F59E0B;
 }
 
 /* Base Styles */
@@ -102,6 +107,33 @@ p {
 }
 
 /* Hero Section */
+.hero-section {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  color: var(--white);
+  text-align: center;
+  margin-bottom: 3rem;
+  border-radius: 0;
+}
+
+.hero-section .hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  color: var(--white);
+}
+
+.hero-section .hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: var(--white);
+  opacity: 0.95;
+}
+
 .hero {
   display: flex;
   align-items: center;
@@ -142,9 +174,15 @@ p {
 }
 
 /* Features Section */
-.features {
-  padding: 5rem 0;
+.features-section {
+  padding: 4rem 0;
   background-color: var(--white);
+  margin-bottom: 3rem;
+}
+
+.features-section h2 {
+  color: var(--primary-color);
+  margin-bottom: 3rem;
 }
 
 .features-grid {
@@ -152,6 +190,41 @@ p {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
+}
+
+.feature-item {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.feature-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.feature-item .feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.feature-item h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.feature-item p {
+  color: var(--text-light);
+  margin-bottom: 0;
+}
+
+.features {
+  padding: 5rem 0;
+  background-color: var(--white);
 }
 
 .feature-card {
@@ -603,6 +676,11 @@ p {
   font-weight: 700;
   color: var(--primary-color);
   text-decoration: none;
+  transition: var(--transition);
+}
+
+.brand:hover {
+  color: var(--primary-dark);
 }
 
 .nav {
@@ -622,12 +700,479 @@ p {
   color: var(--primary-color);
 }
 
+/* Products Section */
+.products-section {
+  padding: 4rem 0;
+  background-color: var(--light-color);
+  margin-bottom: 3rem;
+}
+
+.products-section h2 {
+  color: var(--primary-color);
+  margin-bottom: 3rem;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.product-card {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  border: 1px solid #E2E8F0;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary-light);
+}
+
+.product-card h3 {
+  color: var(--dark-color);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+.product-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.product-card .btn {
+  width: 100%;
+  max-width: 200px;
+}
+
+/* Footer Styles */
 .site-footer {
   margin-top: 4rem;
-  padding: 2rem 0;
-  background-color: var(--light-color);
-  text-align: center;
+  padding: 3rem 0 1rem;
+  background-color: var(--secondary-color);
+  color: var(--white);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 3rem;
+  margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+  color: var(--white);
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 0.8rem;
   color: var(--text-light);
+}
+
+.footer-section ul li a {
+  color: var(--text-light);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.footer-section ul li a:hover {
+  color: var(--primary-light);
+}
+
+.footer-copyright {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+}
+
+.footer-copyright p {
+  margin: 0;
+}
+
+/* Medicines Page */
+.medicines-page {
+  padding: 2rem 0;
+}
+
+.medicines-header {
+  margin-bottom: 2rem;
+}
+
+.medicines-header h2 {
+  margin-bottom: 1.5rem;
+  color: var(--secondary-color);
+}
+
+.search-container {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px 20px;
+  border: 2px solid #E2E8F0;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.1);
+}
+
+.search-btn {
+  padding: 12px 24px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: var(--transition);
+}
+
+.search-btn:hover {
+  background-color: var(--primary-dark);
+}
+
+/* Medicine Cards */
+.medicines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.medicine-card {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  border: 1px solid #E2E8F0;
+}
+
+.medicine-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.medicine-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.medicine-category {
+  background-color: var(--light-color);
+  color: var(--primary-color);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.rx-badge {
+  background-color: var(--warning-color);
+  color: var(--white);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.medicine-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+}
+
+.medicine-description {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.medicine-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #E2E8F0;
+}
+
+.medicine-price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.medicine-stock {
+  font-size: 0.9rem;
+  color: var(--text-light);
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 1rem;
+}
+
+.add-to-cart-btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Cart Notification */
+.cart-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--success-color);
+  color: var(--white);
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-hover);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s ease;
+}
+
+.cart-notification.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Auth Form Styles */
+.auth-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--light-color) 0%, var(--white) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-container {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-hover);
+  max-width: 500px;
+  width: 100%;
+  padding: 2.5rem;
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+  color: var(--secondary-color);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #E2E8F0;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 1rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: var(--transition);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab-btn.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.tab-btn:hover {
+  color: var(--primary-color);
+}
+
+.auth-form {
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
+}
+
+.auth-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.auth-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--dark-color);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="tel"],
+.auth-form input[type="date"],
+.auth-form input[type="password"],
+.auth-form textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #E2E8F0;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.auth-form input:focus,
+.auth-form textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.1);
+}
+
+.auth-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 1rem;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #E2E8F0;
+}
+
+.auth-footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.auth-footer a:hover {
+  color: var(--primary-dark);
+}
+
+/* Cart Badge */
+.cart-badge {
+  position: relative;
+}
+
+#cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--warning-color);
+  color: var(--white);
+  border-radius: 50%;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .medicines-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .auth-container {
+    padding: 2rem;
+  }
+  
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-section .hero-subtitle {
+    font-size: 1.2rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -639,7 +1184,7 @@ p {
     font-size: 1.5rem;
   }
   
-  .feature-card, .testimonial-card {
+  .feature-card, .testimonial-card, .medicine-card {
     padding: 1.5rem;
   }
   
@@ -652,11 +1197,24 @@ p {
     padding: 1.5rem;
   }
   
+  .auth-container {
+    padding: 1.5rem;
+  }
+  
   .actions {
     flex-direction: column;
   }
   
   .actions .btn {
     width: 100%;
+  }
+  
+  .search-container {
+    flex-direction: column;
+  }
+  
+  .nav {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }

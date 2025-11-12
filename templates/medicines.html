@@ -1,10 +1,18 @@
 {% extends "base.html" %}
 {% block title %}Medi-Reach | Medicines{% endblock %}
 {% block content %}
-  <h2>Available Medicines</h2>
+  <div class="medicines-page">
+    <div class="medicines-header">
+      <h2>Available Medicines</h2>
+      <div class="search-container">
+        <input type="text" id="medicine-search" placeholder="Search for medicine, etc..." class="search-input">
+        <button type="button" class="search-btn">🔍</button>
+      </div>
+    </div>
 
-  <div id="medicine-container">
-    <!-- items will be added here by JS -->
+    <div id="medicine-container" class="medicines-grid">
+      <!-- Medicine cards will be added here by JS -->
+    </div>
   </div>
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
